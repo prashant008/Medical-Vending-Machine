@@ -1,0 +1,216 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<tuple<string ,int,int>>medicine;
+int discount=0;
+vector<string>c_medicine; vector<int>c_quantity; vector<int>c_price; vector<int>c_amount;
+int sale=0;
+void add_medicine(){
+    int p;
+    cout<<endl<<endl<<endl<<endl;
+    do{cout<<"\t\t\t\t Enter Medicine Name\t";
+    string s; cin>>s;
+    cout<<"\t\t\t\t Enter Price of Medicine\t";
+    cin>>p;
+    cout<<"\t\t\t\t Enter Quantity of Medicine\t";
+    int q; cin>>q;
+    medicine.push_back(make_tuple(s,p,q));
+    cout<<endl<<endl<<endl;;
+    cout<<" \t\t\t\t\t\t 1 For Add More Medicine"<<endl;
+    cout<<" \t\t\t\t\t\t 0 For EXIT"<<endl;
+    cin>>p;
+    }while(p);
+}
+
+void check_stock(){
+    cout<<endl<<endl<<endl;
+    cout<<"\t\tSerial No.\t\t\tName\t\t\t\tPrice\t\t\t\tQuantity"<<endl;
+    if(medicine.size()==0)
+        cout<<"\t\t0\t\t\t\tNA\t\t\t\tNA\t\t\t\tNA"<<endl;
+    else{
+        for(int i=0;i<medicine.size();i++){
+            cout<<"\t\t     "<<i+1<<"\t\t\t      "<<get<0>(medicine[i])<<"\t\t\t\t "<<get<1>(medicine[i])<<"\t\t\t\t"<<get<2>(medicine[i])<<endl;
+        }
+    }
+cout<<endl<<endl;
+
+}
+
+void under_stock(){
+    int t=1;
+     cout<<endl<<endl<<endl;
+    cout<<"\t\tSerial No.\t\t\tName\t\t\t\tPrice\t\t\t\tQuantity"<<endl;
+    if(medicine.size()==0)
+        cout<<"\t\t     0\t\t\t\tNA\t\t\t\tNA\t\t\t\tNA"<<endl;
+    else{
+
+        for(int i=0;i<medicine.size();i++){
+                if(get<2>(medicine[i])<3){
+            cout<<"\t\t     "<<t<<"\t\t\t\t"<<get<0>(medicine[i])<<"\t\t\t\t  "<<get<1>(medicine[i])<<"\t\t\t\t  "<<get<2>(medicine[i])<<endl;
+            t++;}
+        }
+    }
+    if(medicine.size()!=0 && t==0)
+      cout<<"\t\t     0\t\t\t\tNA\t\t\t\tNA\t\t\t\tNA"<<endl;
+
+cout<<endl<<endl;
+}
+void print_bill(){
+    int total=0;
+    cout<<"\tSerial No.\t\t\tName\t\t\tPrice\t\t\tQuantity\t\t\tAmount"<<endl;
+    for(int i=0;i<c_quantity.size();i++){
+    cout<<"\t\t"<<i+1<<"\t\t\t"<<c_medicine[i]<<"\t\t\t"<<c_price[i]<<"\t\t\t"<<c_quantity[i]<<"\t\t\t\t"<<c_amount[i]<<endl;
+    total+=c_amount[i];
+    }
+cout<<endl<<"\t\t\t\t\tTotal Amount is "<<total<<endl;
+cout<<"\t\t\t\t\tDiscount "<<discount<<" %"<<endl;
+float total1=total*1.0;
+cout<<endl<<"\t\t\t\t\tTotal Amount to Pay is "<<(total1*(100-discount))/100<<endl;
+sale+=(total1*(100-discount))/100;
+c_medicine.clear();
+c_quantity.clear();
+c_price.clear();
+c_amount.clear();
+}
+
+int  purchase(int i, int done){
+    int qt;
+      cout<<endl<<"\t\t\t\t\tEnter Quantity\t"<<endl<<endl; cin>>qt;
+    if(qt>get<2>(medicine[i])){
+        cout<<"\t\t\t\tSORRY only "<<get<2>(medicine[i])<<" is available"<<endl<<endl;
+        return 0;
+    }
+
+    int cnfirm;
+    cout<<"\t\t\t\t\t\tEnter"<<endl<<endl;
+        cout<<"\t\t\t\t\t1 For CONFIRM"<<endl<<"\t\t\t\t\t0 For EXIT"<<endl;
+        cin>>cnfirm;
+    if(cnfirm){
+        c_medicine.push_back(get<0>(medicine[i]));
+        c_quantity.push_back(qt);
+        c_price.push_back(get<1>(medicine[i]));
+        c_amount.push_back(get<1>(medicine[i])*qt);
+        get<2>(medicine[i])-=qt;
+        cout<<endl<<"\t\t\t\t\t SUCCESSFULLY PUCHASED"<<endl<<endl;
+        return 1;
+    }
+    else
+        return 0;
+
+
+}
+
+void customer(){
+    int done=0;
+    string temp;
+    int check;
+    do{cout<<endl<<endl<<"\t\t\t\t\tEnter Medicine Name\t"; cin>>temp;
+    int found=0;
+    int i;
+    for( i=0;i<medicine.size();i++){
+        if(temp==get<0>(medicine[i])){
+                cout<<endl<<endl<<"\t\t\t\t\t\tOUR STOCK\t"<<endl;
+            cout<<endl<<"\t\t\t\tName\t\t\t\tPrice\t\t\t\tQuantity"<<endl;
+            cout<<"\t\t\t\t"<<get<0>(medicine[i])<<"\t\t\t\t"<<get<1>(medicine[i])<<"\t\t\t\t"<<get<2>(medicine[i])<<endl;
+            cout<<endl<<endl<<endl;
+            found++;
+            break;
+        }}
+        if(found==0)
+            cout<<endl<<endl<<"\t\t\t\t\tSORRY Currently Unavailable"<<endl<<endl<<endl;
+        else{
+            cout<<"\t\t\t\t\t\tEnter"<<endl<<endl;
+        cout<<"\t\t\t\t\t1 For Purchase"<<endl<<"\t\t\t\t\t0 For EXIT"<<endl;
+        int v; cin>>v;
+        if(v){
+           done=purchase(i,done);
+        }
+        else
+            return;
+        }
+        cout<<"\t\t\t\t\t\tEnter"<<endl<<endl;
+        cout<<"\t\t\t\t\t1 For Continue"<<endl;
+        if(done){
+            cout<<"\t\t\t\t\t2 For Print Bill"<<endl;
+        }
+        cout<<"\t\t\t\t\t0 For EXIT"<<endl;
+        cin>>check;
+        if(check==2){
+            print_bill();
+            break;
+        }
+
+    }while(check);
+
+
+
+}
+void today_sale(){
+
+    cout<<"\t\t\t\t\tTodat Sale is "<<sale<<endl;
+}
+
+
+void seller(){
+    cout<<endl<<endl<<endl<<endl;
+
+    cout<<"\t\t\t\t\t\t\tENTER"<<endl;
+    cout<<endl;
+    cout<<"\t\t\t\t\t\t     1 For Add Medicine"<<endl;
+    cout<<"\t\t\t\t\t\t     2 For Check Stock"<<endl;
+    cout<<"\t\t\t\t\t\t     3 For Medicine Under Stock"<<endl;
+    cout<<"\t\t\t\t\t\t     4 For Today Sale"<<endl;
+    cout<<"\t\t\t\t\t\t     5 For Add Discount"<<endl;
+    cout<<"\t\t\t\t\t\t     6 Return"<<endl;
+    int c; cin>>c;
+    if(c==6)
+        return;
+    switch(c){
+        case 1 : add_medicine();
+        break;
+        case 2 : check_stock();
+        break;
+        case 3 : under_stock();
+        break;
+        case 4 : today_sale();
+        break;
+        case 5 :
+            cout<<endl<<endl<<endl;
+            cout<<"\t\t\t\t\t\tEnter Discount \t";
+            cin>>discount;
+            cout<<endl<<"\t\t\t\t\t"<<discount <<" % Discount Added Succesfully"<<endl<<endl<<endl;
+        break;
+    }
+
+
+}
+
+int main(){
+int w=1;
+while(w){
+
+    cout<<endl<<endl<<endl<<endl;
+
+    cout<<"\t\t\t\t\t\t\tENTER"<<endl;
+    cout<<endl;
+    cout<<"\t\t\t\t\t\t     1 For Customer"<<endl;
+    cout<<"\t\t\t\t\t\t     2 For Seller"<<endl;
+    cout<<"\t\t\t\t\t\t     3 For Exit"<<endl;
+cin>>w;
+
+switch(w){
+    case 1 : customer();
+    break;
+    case 2 : seller();
+    break;
+
+}
+    if(w==3)
+        break;
+
+}
+
+
+return 0;
+
+}
